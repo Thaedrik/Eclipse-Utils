@@ -6,8 +6,10 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.codestorming.eclipse.util.EclipseUtilActivator
 Bundle-Vendor: Codestorming
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui;bundle-version="3.7.0"
+ org.eclipse.ui;bundle-version="3.7.0",
+ org.eclipse.core.resources;bundle-version="3.7.101";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.codestorming.eclipse.util,
+ org.codestorming.eclipse.util.io,
  org.codestorming.eclipse.util.swt
