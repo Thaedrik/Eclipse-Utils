@@ -11,5 +11,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.codestorming.eclipse.util,
- org.codestorming.eclipse.util.io,
  org.codestorming.eclipse.util.swt
