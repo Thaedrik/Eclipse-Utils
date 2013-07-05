@@ -12,8 +12,10 @@
 package org.codestorming.eclipse.util.swt;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Utility class for Standard Widget Toolkit (SWT).
@@ -25,7 +27,18 @@ public class SWTUtil {
 	public static final int BUTTON_STD_WIDTH = 100;
 
 	// Suppressing default constructor, ensuring non-instantiability.
-	private SWTUtil() {
+	private SWTUtil() {}
+
+	/**
+	 * Returns the current {@link Display} if this method is called in an UI thread,
+	 * otherwise returns the default display.
+	 * 
+	 * @return the current {@link Display} if this method is called in an UI thread,
+	 *         otherwise returns the default display.
+	 */
+	public static Display getDisplay() {
+		Display display = Display.getCurrent();
+		return display != null ? display : Display.getDefault();
 	}
 
 	/**
@@ -43,5 +56,16 @@ public class SWTUtil {
 		data.minimumWidth = width;
 		data.widthHint = width;
 		button.setLayoutData(data);
+	}
+
+	/**
+	 * Returns the system default {@link Font font}.
+	 * <p>
+	 * Convenient method for <code>Display.getSystemFont()</code>.
+	 * 
+	 * @return the system default {@link Font font}.
+	 */
+	public static Font getDefaultFont() {
+		return getDisplay().getSystemFont();
 	}
 }
