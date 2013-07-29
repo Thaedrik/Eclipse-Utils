@@ -14,6 +14,8 @@ package org.codestorming.eclipse.util.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Utility class for Standard Widget Toolkit (SWT).
@@ -25,8 +27,7 @@ public class SWTUtil {
 	public static final int BUTTON_STD_WIDTH = 100;
 
 	// Suppressing default constructor, ensuring non-instantiability.
-	private SWTUtil() {
-	}
+	private SWTUtil() {}
 
 	/**
 	 * Sets the minimum width of the given {@link Button button} to
@@ -43,5 +44,33 @@ public class SWTUtil {
 		data.minimumWidth = width;
 		data.widthHint = width;
 		button.setLayoutData(data);
+	}
+
+	/**
+	 * Create and open an error {@link MessageBox} with the given parent {@code shell},
+	 * {@code title} and {@code message}.
+	 * 
+	 * @param shell The parent shell of the message box.
+	 * @param title The title of the message box or {@code null}.
+	 * @param message The message of the message box.
+	 */
+	public static void errorMessageBox(Shell shell, String title, String message) {
+		final MessageBox msgBox = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
+		if (title != null) {
+			msgBox.setText(title);
+		}
+		msgBox.setMessage(message);
+		msgBox.open();
+	}
+
+	/**
+	 * Create and open an error {@link MessageBox} with the given parent {@code shell} and
+	 * {@code message}.
+	 * 
+	 * @param shell The parent shell of the message box.
+	 * @param message The message of the message box.
+	 */
+	public static void errorMessageBox(Shell shell, String message) {
+		errorMessageBox(shell, null, message);
 	}
 }
