@@ -11,6 +11,8 @@
  ****************************************************************************/
 package org.codestorming.eclipse.util.swt;
 
+import org.codestorming.eclipse.util.EclipseUtilActivator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -55,12 +57,16 @@ public class SWTUtil {
 	 * @param message The message of the message box.
 	 */
 	public static void errorMessageBox(Shell shell, String title, String message) {
-		final MessageBox msgBox = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
-		if (title != null) {
-			msgBox.setText(title);
+		if (!shell.isDisposed()) {
+			final MessageBox msgBox = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
+			if (title != null) {
+				msgBox.setText(title);
+			}
+			msgBox.setMessage(message);
+			msgBox.open();
+		} else {
+			EclipseUtilActivator.log(message, IStatus.ERROR);
 		}
-		msgBox.setMessage(message);
-		msgBox.open();
 	}
 
 	/**

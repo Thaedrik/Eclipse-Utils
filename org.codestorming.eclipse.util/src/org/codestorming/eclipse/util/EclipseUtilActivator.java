@@ -11,34 +11,18 @@
  ****************************************************************************/
 package org.codestorming.eclipse.util;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
+import org.codestorming.eclipse.util.pde.BundleActivatorWithLog;
 
 /**
  * Activator of the Eclipse Util plug-in.
  */
-public class EclipseUtilActivator implements BundleActivator {
+public class EclipseUtilActivator extends BundleActivatorWithLog {
+	
+	public static final String PLUGIN_ID = "org.codestorming.eclipse.util";
 
-	private static BundleContext context;
-
-	static BundleContext getContext() {
-		return context;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext bundleContext) throws Exception {
-		EclipseUtilActivator.context = bundleContext;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext bundleContext) throws Exception {
-		EclipseUtilActivator.context = null;
+	@Override
+	public String getPluginID() {
+		return PLUGIN_ID;
 	}
 
 }
