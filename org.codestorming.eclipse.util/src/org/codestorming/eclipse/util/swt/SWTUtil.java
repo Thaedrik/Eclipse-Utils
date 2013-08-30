@@ -14,10 +14,16 @@ package org.codestorming.eclipse.util.swt;
 import org.codestorming.eclipse.util.EclipseUtilActivator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * Utility class for Standard Widget Toolkit (SWT).
@@ -30,6 +36,126 @@ public class SWTUtil {
 
 	// Suppressing default constructor, ensuring non-instantiability.
 	private SWTUtil() {}
+
+	/**
+	 * Create a {@link Text} field in which only integers can be inserted.
+	 * 
+	 * @param parent The SWT parent composite.
+	 * @param style The style of the text field.
+	 * @return the created {@link Text} field.
+	 */
+	public static Text createTextNumberWidget(Composite parent, int style) {
+		final Text txt = new Text(parent, style);
+		addKeyListenerForTextNumber(txt);
+		return txt;
+	}
+
+	/**
+	 * Create a {@link Text} field in which only integers can be inserted.
+	 * 
+	 * @param toolkit The {@link FormToolkit} to use to create the text field.
+	 * @param parent The SWT parent composite.
+	 * @param value The initial value (or {@code null})
+	 * @return the created {@link Text} field.
+	 */
+	public static Text createTextNumberWidget(FormToolkit toolkit, Composite parent, Long value) {
+		final Text txt = toolkit.createText(parent, value == null ? null : String.valueOf(value));
+		addKeyListenerForTextNumber(txt);
+		return txt;
+	}
+
+	/**
+	 * Create a {@link Text} field in which only integers can be inserted.
+	 * 
+	 * @param toolkit The {@link FormToolkit} to use to create the text field.
+	 * @param parent The SWT parent composite.
+	 * @param style The text field style.
+	 * @param value The initial value (or {@code null})
+	 * @return the created {@link Text} field.
+	 */
+	public static Text createTextNumberWidget(FormToolkit toolkit, Composite parent, int style, Long value) {
+		final Text txt = toolkit.createText(parent, value == null ? null : String.valueOf(value), style);
+		addKeyListenerForTextNumber(txt);
+		return txt;
+	}
+
+	/**
+	 * Create a {@link Text} field in which only a double can be inserted.
+	 * 
+	 * @param parent The SWT parent composite.
+	 * @param style The style of the text field.
+	 * @return the created {@link Text} field.
+	 */
+	public static Text createTextDoubleWidget(Composite parent, int style) {
+		final Text txt = new Text(parent, style);
+		addKeyListenerForTextDouble(txt);
+		return txt;
+	}
+
+	/**
+	 * Create a {@link Text} field in which only a double can be inserted.
+	 * 
+	 * @param toolkit The {@link FormToolkit} to use to create the text field.
+	 * @param parent The SWT parent composite.
+	 * @param value The initial value (or {@code null})
+	 * @return the created {@link Text} field.
+	 */
+	public static Text createTextDoubleWidget(FormToolkit toolkit, Composite parent, Double value) {
+		final Text txt = toolkit.createText(parent, value == null ? null : String.valueOf(value));
+		addKeyListenerForTextDouble(txt);
+		return txt;
+	}
+
+	/**
+	 * Create a {@link Text} field in which only a double can be inserted.
+	 * 
+	 * @param toolkit The {@link FormToolkit} to use to create the text field.
+	 * @param parent The SWT parent composite.
+	 * @param style The text field style.
+	 * @param value The initial value (or {@code null})
+	 * @return the created {@link Text} field.
+	 */
+	public static Text createTextDoubleWidget(FormToolkit toolkit, Composite parent, int style, Double value) {
+		final Text txt = toolkit.createText(parent, value == null ? null : String.valueOf(value), style);
+		addKeyListenerForTextDouble(txt);
+		return txt;
+	}
+
+	private static void addKeyListenerForTextNumber(Text txt) {
+		txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				final int keyCode = e.keyCode;
+				// Code 8 : Key "Backspace"
+				// Code 16777223 : Key "begin"
+				if (keyCode != 8 && keyCode != 16777223 && keyCode != SWT.ARROW_LEFT && keyCode != SWT.ARROW_RIGHT
+						&& keyCode != (int) SWT.DEL && keyCode != SWT.CAPS_LOCK && keyCode != SWT.END
+						&& (e.stateMask & SWT.CTRL) == 0 && (e.stateMask & SWT.ALT) == 0) {
+					e.doit = e.character == '0' || e.character == '1' || e.character == '2' || e.character == '3'
+							|| e.character == '4' || e.character == '5' || e.character == '6' || e.character == '7'
+							|| e.character == '8' || e.character == '9';
+				}
+			}
+		});
+	}
+
+	private static void addKeyListenerForTextDouble(final Text txt) {
+		txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				final int keyCode = e.keyCode;
+				// Code 8 : Key "Backspace"
+				// Code 16777223 : Key "begin"
+				if (keyCode != 8 && keyCode != 16777223 && keyCode != SWT.ARROW_LEFT && keyCode != SWT.ARROW_RIGHT
+						&& keyCode != (int) SWT.DEL && keyCode != SWT.CAPS_LOCK && keyCode != SWT.END
+						&& (e.stateMask & SWT.CTRL) == 0 && (e.stateMask & SWT.ALT) == 0) {
+					final char c = e.character;
+					e.doit = c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6'
+							|| c == '7' || c == '8' || c == '9' || c == '.' && !txt.getText().contains(".");
+				}
+			}
+		});
+	}
 
 	/**
 	 * Sets the minimum width of the given {@link Button button} to
@@ -78,5 +204,13 @@ public class SWTUtil {
 	 */
 	public static void errorMessageBox(Shell shell, String message) {
 		errorMessageBox(shell, null, message);
+	}
+
+	public static Display getDisplay() {
+		Display display = Display.getCurrent();
+		if (display == null) {
+			display = Display.getDefault();
+		}
+		return display;
 	}
 }
