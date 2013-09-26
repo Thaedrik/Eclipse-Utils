@@ -11,7 +11,6 @@
  ****************************************************************************/
 package org.codestorming.eclipse.util.pde;
 
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -30,6 +29,22 @@ public abstract class UIPluginWithLog extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
+		super.stop(context);
+	}
+
+	/**
+	 * Logs the given status. The status is distributed to the log listeners installed on
+	 * this log and then to the log listeners installed on the platform.
+	 * 
+	 * @param status the status to log.
+	 */
+	public static void log(IStatus status) {
+		getDefault().getLog().log(status);
 	}
 
 	/**
@@ -75,9 +90,8 @@ public abstract class UIPluginWithLog extends AbstractUIPlugin {
 	 * @param exception The originating exception.
 	 */
 	public static void log(String message, int severity, Exception exception) {
-		ILog log = getDefault().getLog();
 		IStatus status = new Status(severity, getDefault().getPluginID(), message, exception);
-		log.log(status);
+		log(status);
 	}
 
 	/**
