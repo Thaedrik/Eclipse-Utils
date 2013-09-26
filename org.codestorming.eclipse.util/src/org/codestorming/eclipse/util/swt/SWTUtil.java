@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -36,6 +37,29 @@ public class SWTUtil {
 
 	// Suppressing default constructor, ensuring non-instantiability.
 	private SWTUtil() {}
+
+	/**
+	 * Returns the current {@link Display} if this method is called in an UI thread,
+	 * otherwise returns the default display.
+	 * 
+	 * @return the current {@link Display} if this method is called in an UI thread,
+	 *         otherwise returns the default display.
+	 */
+	public static Display getDisplay() {
+		Display display = Display.getCurrent();
+		return display != null ? display : Display.getDefault();
+	}
+
+	/**
+	 * Returns the system default {@link Font font}.
+	 * <p>
+	 * Convenient method for <code>Display.getSystemFont()</code>.
+	 * 
+	 * @return the system default {@link Font font}.
+	 */
+	public static Font getDefaultFont() {
+		return getDisplay().getSystemFont();
+	}
 
 	/**
 	 * Create a {@link Text} field in which only integers can be inserted.
@@ -204,13 +228,5 @@ public class SWTUtil {
 	 */
 	public static void errorMessageBox(Shell shell, String message) {
 		errorMessageBox(shell, null, message);
-	}
-
-	public static Display getDisplay() {
-		Display display = Display.getCurrent();
-		if (display == null) {
-			display = Display.getDefault();
-		}
-		return display;
 	}
 }
