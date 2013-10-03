@@ -18,6 +18,7 @@ import java.io.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -127,6 +128,14 @@ public class EclipseUtil {
 	 * @return the absolute path of the given one.
 	 */
 	public static String getAbsolutePath(String path) {
+		IResource resource = getWorkspace().getRoot().findMember(path);
+		if (resource != null) {
+			return resource.getLocation().toOSString();
+		}// else
+		File pathFile = new File(path);
+		if (pathFile.exists()) {
+			return pathFile.toString();
+		}// else
 		final Location location = Platform.getInstanceLocation();
 		if (location != null) {
 			File file = new File(location.getURL().getFile());
