@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Util
 Bundle-SymbolicName: org.codestorming.eclipse.util;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.codestorming.eclipse.util.EclipseUtilActivator
 Bundle-Vendor: Codestorming
 Require-Bundle: org.eclipse.core.runtime,
@@ -17,8 +17,16 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.codestorming.eclipse.e4.di,
  org.codestorming.eclipse.e4.handler,
+ org.codestorming.eclipse.io,
+ org.codestorming.eclipse.runtime,
  org.codestorming.eclipse.util,
  org.codestorming.eclipse.util.pde,
  org.codestorming.eclipse.util.preferences,
- org.codestorming.eclipse.util.swt
-Bundle-ClassPath: .
+ org.codestorming.eclipse.util.swt,
+ org.codestorming.util,
+ org.codestorming.util.collection,
+ org.codestorming.util.command,
+ org.codestorming.util.io,
+ org.codestorming.util.misc
+Bundle-ClassPath: lib/codestorming-util.jar,
+ .
