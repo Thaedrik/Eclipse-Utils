@@ -163,7 +163,7 @@ public class EclipseUtil {
 	 * @since 2.0
 	 */
 	public static void addProjectBuilder(IProject project, String builderId) throws CoreException {
-		if (projectHasBuilder(project, builderId)) {
+		if (!projectHasBuilder(project, builderId)) {
 			internalAddProjectBuilder(project, builderId, null);
 		}
 	}
@@ -185,7 +185,7 @@ public class EclipseUtil {
 	public static void addProjectBuilder(IProject project, String builderId, String afterBuilderId)
 			throws CoreException {
 		isNotNull(afterBuilderId);
-		if (projectHasBuilder(project, builderId)) {
+		if (!projectHasBuilder(project, builderId)) {
 			internalAddProjectBuilder(project, builderId, afterBuilderId);
 		}
 	}
