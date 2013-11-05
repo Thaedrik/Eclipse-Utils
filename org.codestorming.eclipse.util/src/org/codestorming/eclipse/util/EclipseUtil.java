@@ -15,6 +15,8 @@ import static org.eclipse.core.runtime.Assert.isNotNull;
 
 import java.io.File;
 
+import org.codestorming.util.collection.Arrays2;
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
@@ -24,6 +26,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Utility and convenient methods for the Eclipse platform.
@@ -120,6 +123,126 @@ public class EclipseUtil {
 	}
 
 	/**
+	 * Indicates if the given {@link IProject project} has the specified builder.
+	 * 
+	 * @param project The {@link IProject project}.
+	 * @param builderId The builder's ID.
+	 * @return {@code true} if the given {@link IProject project} has the specified
+	 *         builder;<br>
+	 *         {@code false} otherwise.
+	 * @throws CoreException if this method fails. Reasons include:
+	 *         <ul>
+	 *         <li>The project does not exist.</li>
+	 *         <li>The project is not open.</li>
+	 *         </ul>
+	 * @since 2.0
+	 */
+	public static boolean projectHasBuilder(IProject project, String builderId) throws CoreException {
+		isNotNull(project);
+		isNotNull(builderId);
+		final IProjectDescription projectDescription = project.getDescription();
+		ICommand[] buildSpec = projectDescription.getBuildSpec();
+		for (final ICommand command : buildSpec) {
+			if (builderId.equals(command.getBuilderName())) {
+				return true;
+			}
+		}// else
+		return false;
+	}
+
+	/**
+	 * Add the builder with the specified id to the given {@link IProject project}.
+	 * 
+	 * @param project The {@link IProject project}.
+	 * @param builderId The builder's id.
+	 * @throws CoreException if this method fails. Reasons include:
+	 *         <ul>
+	 *         <li>The project does not exist.</li>
+	 *         <li>The project is not open.</li>
+	 *         </ul>
+	 * @since 2.0
+	 */
+	public static void addProjectBuilder(IProject project, String builderId) throws CoreException {
+		if (projectHasBuilder(project, builderId)) {
+			internalAddProjectBuilder(project, builderId, null);
+		}
+	}
+
+	/**
+	 * Add the builder with the specified id to the given {@link IProject project} after
+	 * the builder corresponding to the {@code afterBuilderId}.
+	 * 
+	 * @param project The {@link IProject project}.
+	 * @param builderId The builder's id.
+	 * @param afterBuilderId The builder's id after which to insert the builder.
+	 * @throws CoreException if this method fails. Reasons include:
+	 *         <ul>
+	 *         <li>The project does not exist.</li>
+	 *         <li>The project is not open.</li>
+	 *         </ul>
+	 * @since 2.0
+	 */
+	public static void addProjectBuilder(IProject project, String builderId, String afterBuilderId)
+			throws CoreException {
+		isNotNull(afterBuilderId);
+		if (projectHasBuilder(project, builderId)) {
+			internalAddProjectBuilder(project, builderId, afterBuilderId);
+		}
+	}
+
+	/**
+	 * Remove the builder with the specified id from the given {@link IProject project}.
+	 * 
+	 * @param project The {@link IProject project}.
+	 * @param builderId The builder's id.
+	 * @throws CoreException if this method fails. Reasons include:
+	 *         <ul>
+	 *         <li>The project does not exist.</li>
+	 *         <li>The project is not open.</li>
+	 *         </ul>
+	 * @since 2.0
+	 */
+	public static void removeProjectBuilder(IProject project, String builderId) throws CoreException {
+		isNotNull(project);
+		isNotNull(builderId);
+		internalRemoveProjectBuilder(project, builderId);
+	}
+
+	private static void internalAddProjectBuilder(IProject project, String builderId, String afterBuilderId)
+			throws CoreException {
+		final IProjectDescription projectDescription = project.getDescription();
+		ICommand[] buildSpec = projectDescription.getBuildSpec();
+		int insertIndex = 0;
+		for (int i = 0; i < buildSpec.length && insertIndex == 0; i++) {
+			if (afterBuilderId.equals(buildSpec[i].getBuilderName())) {
+				insertIndex = i + 1;
+			}
+		}
+		final ICommand command = projectDescription.newCommand();
+		command.setBuilderName(builderId);
+		buildSpec = Arrays2.insert(buildSpec, insertIndex, command);
+		projectDescription.setBuildSpec(buildSpec);
+		project.setDescription(projectDescription, null);
+	}
+
+	private static void internalRemoveProjectBuilder(IProject project, String builderId) throws CoreException {
+		final IProjectDescription projectDescription = project.getDescription();
+		ICommand[] buildSpec = projectDescription.getBuildSpec();
+		int removeIndex = -1;
+		for (int i = 0; i < buildSpec.length; i++) {
+			if (builderId.equals(buildSpec[i].getBuilderName())) {
+				removeIndex = i;
+				break;
+			}
+		}
+		if (removeIndex >= 0) {
+			buildSpec = Arrays2.remove(buildSpec, removeIndex);
+			projectDescription.setBuildSpec(buildSpec);
+			project.setDescription(projectDescription, null);
+		}
+	}
+
+	/**
 	 * Transforms the given path into an absolute path.
 	 * <p>
 	 * Does nothing if the given path is relative to the current workspace.
@@ -156,5 +279,18 @@ public class EclipseUtil {
 	 */
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
+	}
+
+	/**
+	 * Returns the current {@link Display} if this method is called in an SWT Thread,
+	 * otherwise the default display ({@link Display#getDefault()}).
+	 * 
+	 * @return the current {@link Display} if this method is called in an SWT Thread;<br>
+	 *         the default display otherwise.
+	 * @since 2.0
+	 */
+	public static Display getDisplay() {
+		Display display = Display.getCurrent();
+		return display != null ? display : Display.getDefault();
 	}
 }
