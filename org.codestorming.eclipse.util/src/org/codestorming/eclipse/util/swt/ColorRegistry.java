@@ -76,7 +76,8 @@ public final class ColorRegistry {
 	 */
 	public static Color getColor(RGB rgb) {
 		ColorRegistry registry = getRegistry(EclipseUtil.getDisplay());
-		return registry != null ? registry.internalGetColor(rgb) : null;
+		int hexCode = (rgb.red << 16) | (rgb.green << 8) | rgb.blue;
+		return registry != null ? registry.internalGetColor(hexCode) : null;
 	}
 
 	/**
@@ -147,17 +148,6 @@ public final class ColorRegistry {
 		Color color = colors.get(hexCode);
 		if (color == null) {
 			color = createColor(hexCode);
-			colors.put(hexCode, color);
-		}
-		return color;
-	}
-
-	private Color internalGetColor(RGB rgb) {
-		checkDispose();
-		int hexCode = (rgb.red << 16) | (rgb.green << 8) | rgb.blue;
-		Color color = colors.get(hexCode);
-		if (color == null) {
-			color = new Color(display, rgb);
 			colors.put(hexCode, color);
 		}
 		return color;

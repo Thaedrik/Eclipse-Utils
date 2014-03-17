@@ -25,40 +25,38 @@ import org.osgi.framework.BundleContext;
  */
 public abstract class BundleActivatorWithLog implements BundleActivator {
 
-	private static BundleContext context;
-
-	private static BundleActivatorWithLog plugin;
+	private BundleContext context;
 
 	/**
 	 * Returns the log for this plug-in. If no such log exists, one is created.
 	 * 
 	 * @return the log for this plug-in
 	 */
-	public final ILog getLog() {
+	public ILog getLog() {
 		return Platform.getLog(context.getBundle());
 	}
 
-	protected static BundleContext getContext() {
+	protected BundleContext getContext() {
 		return context;
 	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		BundleActivatorWithLog.context = context;
-		plugin = this;
+		this.context = context;
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		BundleActivatorWithLog.context = null;
+		this.context = null;
 	}
 
 	/**
 	 * Logs the given {@link Exception exception}.
 	 * 
 	 * @param exception The {@code exception} to log.
+	 * @since 3.0
 	 */
-	public static void log(Exception exception) {
+	public void log(Exception exception) {
 		log(exception.getMessage(), IStatus.ERROR, exception);
 	}
 
@@ -74,8 +72,9 @@ public abstract class BundleActivatorWithLog implements BundleActivator {
 	 * 
 	 * @param message The message to log.
 	 * @param severity The severity of the message.
+	 * @since 3.0
 	 */
-	public static void log(String message, int severity) {
+	public void log(String message, int severity) {
 		log(message, severity, null);
 	}
 
@@ -94,20 +93,12 @@ public abstract class BundleActivatorWithLog implements BundleActivator {
 	 * @param message The message to log.
 	 * @param severity The severity of the message.
 	 * @param exception The originating exception.
+	 * @since 3.0
 	 */
-	public static void log(String message, int severity, Exception exception) {
-		ILog log = getDefault().getLog();
-		IStatus status = new Status(severity, getDefault().getPluginID(), message, exception);
+	public void log(String message, int severity, Exception exception) {
+		ILog log = this.getLog();
+		IStatus status = new Status(severity, this.getPluginID(), message, exception);
 		log.log(status);
-	}
-
-	/**
-	 * Returns the unique instance of this plugin.
-	 * 
-	 * @return the unique instance of this plugin.
-	 */
-	public static BundleActivatorWithLog getDefault() {
-		return plugin;
 	}
 
 	/**

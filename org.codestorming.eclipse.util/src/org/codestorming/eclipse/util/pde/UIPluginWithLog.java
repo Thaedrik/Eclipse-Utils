@@ -14,7 +14,6 @@ package org.codestorming.eclipse.util.pde;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
 
 /**
  * Singleton {@link AbstractUIPlugin} with log methods.
@@ -23,36 +22,24 @@ import org.osgi.framework.BundleContext;
  */
 public abstract class UIPluginWithLog extends AbstractUIPlugin {
 
-	private static UIPluginWithLog plugin;
-
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
 	/**
 	 * Logs the given status. The status is distributed to the log listeners installed on
 	 * this log and then to the log listeners installed on the platform.
 	 * 
 	 * @param status the status to log.
+	 * @since 3.0
 	 */
-	public static void log(IStatus status) {
-		getDefault().getLog().log(status);
+	public void log(IStatus status) {
+		getLog().log(status);
 	}
 
 	/**
 	 * Logs the given {@link Exception exception}.
 	 * 
 	 * @param exception The {@code exception} to log.
+	 * @since 3.0
 	 */
-	public static void log(Exception exception) {
+	public void log(Exception exception) {
 		log(exception.getMessage(), IStatus.ERROR, exception);
 	}
 
@@ -68,8 +55,9 @@ public abstract class UIPluginWithLog extends AbstractUIPlugin {
 	 * 
 	 * @param message The message to log.
 	 * @param severity The severity of the message.
+	 * @since 3.0
 	 */
-	public static void log(String message, int severity) {
+	public void log(String message, int severity) {
 		log(message, severity, null);
 	}
 
@@ -88,19 +76,11 @@ public abstract class UIPluginWithLog extends AbstractUIPlugin {
 	 * @param message The message to log.
 	 * @param severity The severity of the message.
 	 * @param exception The originating exception.
+	 * @since 3.0
 	 */
-	public static void log(String message, int severity, Exception exception) {
-		IStatus status = new Status(severity, getDefault().getPluginID(), message, exception);
+	public void log(String message, int severity, Exception exception) {
+		IStatus status = new Status(severity, getPluginID(), message, exception);
 		log(status);
-	}
-
-	/**
-	 * Returns the unique instance of this plugin.
-	 * 
-	 * @return the unique instance of this plugin.
-	 */
-	public static UIPluginWithLog getDefault() {
-		return plugin;
 	}
 
 	/**

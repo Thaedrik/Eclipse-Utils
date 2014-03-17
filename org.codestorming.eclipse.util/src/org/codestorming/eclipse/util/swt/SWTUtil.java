@@ -215,7 +215,7 @@ public class SWTUtil {
 			msgBox.setMessage(message);
 			msgBox.open();
 		} else {
-			EclipseUtilActivator.log(message, IStatus.ERROR);
+			EclipseUtilActivator.getDefault().log(message, IStatus.ERROR);
 		}
 	}
 

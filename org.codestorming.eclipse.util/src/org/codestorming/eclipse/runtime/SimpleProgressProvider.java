@@ -258,7 +258,8 @@ public class SimpleProgressProvider extends ProgressProvider {
 				if (!currentTask.isEmpty()) {
 					final String task = currentTask.peek();
 					if (!task.equals(name)) {
-						EclipseUtilActivator.log("Expected task " + name + " but was " + task, IStatus.WARNING);
+						EclipseUtilActivator.getDefault().log("Expected task " + name + " but was " + task,
+								IStatus.WARNING);
 					}
 				}
 				progressProvider.subtaskDone(job, taskname);

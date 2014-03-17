@@ -55,7 +55,7 @@ public class EclipseUtil {
 					internalAddProjectNature(project, natureId);
 				}
 			} catch (CoreException e) {
-				EclipseUtilActivator.log(e);
+				EclipseUtilActivator.getDefault().log(e);
 			}
 		}
 	}
@@ -73,7 +73,7 @@ public class EclipseUtil {
 			try {
 				internalRemoveProjectNature(project, natureId);
 			} catch (CoreException e) {
-				EclipseUtilActivator.log(e);
+				EclipseUtilActivator.getDefault().log(e);
 			}
 		}
 	}
@@ -91,7 +91,7 @@ public class EclipseUtil {
 			try {
 				internalAddProjectNature(project, natureId);
 			} catch (CoreException e) {
-				EclipseUtilActivator.log(e);
+				EclipseUtilActivator.getDefault().log(e);
 			}
 		}
 	}
